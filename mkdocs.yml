@@ -1,5 +1,5 @@
-site_name: Cadastro Único
-site_url: https://requisitos-de-software.github.io/2025.1-Cadastro-Unico/
+site_name: PROJETO INTEGRADOR I
+site_url: https://fcte-pi1.github.io/2025_2_grupo2/
 
 markdown_extensions:
   - tables
