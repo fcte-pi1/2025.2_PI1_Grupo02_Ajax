@@ -1,0 +1,38 @@
+site_name: Cadastro Único
+site_url: https://requisitos-de-software.github.io/2025.1-Cadastro-Unico/
+
+markdown_extensions:
+  - tables
+  - md_in_html
+
+nav:
+  - Home:
+      - Sobre: index.md
+  - Another tab example:
+      - Test: ho.md
+theme:
+  logo: assets/LogoCadUn.png
+  name: material
+  font:
+    text: IBM Plex Serif
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - content.code.copy
+  palette:
+    - scheme: light
+      primary: custom
+      toggle:
+        icon: material/weather-night
+        name: Trocar para modo escuro
+
+    - scheme: slate
+      primary: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Trocar para modo claro
+icon:
+  repo: fontawesome/brands/git-alt
+
+extra_css:
+  - assets/css/custom.css
