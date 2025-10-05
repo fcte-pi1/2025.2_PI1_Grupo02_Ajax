@@ -8,8 +8,8 @@ markdown_extensions:
 nav:
   - Home:
       - Sobre: index.md
-  - Another tab example:
-      - Test: ho.md
+  - Arquitetura do hardware:
+      - Diagrama de blocos: arquitetura/blocos.md
 theme:
   logo: assets/LogoCadUn.png
   name: material
