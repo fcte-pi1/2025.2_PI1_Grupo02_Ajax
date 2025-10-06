@@ -10,6 +10,8 @@ nav:
       - Sobre: index.md
   - Another tab example:
       - Test: ho.md
+  - Guia de contribuição:
+      - Fluxo de Trabalho (Git)': 'politica-de-contribuicao.md'
 theme:
   logo: assets/LogoCadUn.png
   name: material
