@@ -7,6 +7,6 @@ A esp e ponte H são alimentadas pela bateria, que deverá receber energia por m
 
 ## Figura 1 - Diagrama de Blocos do Hardware
 
-![figura1](../assets/arquitetura/blocos/block_v1_1.png)
+![figura1](../assets/arquitetura/blocos/block_v1_2.png)
 
 **Fonte:** Equipe 2
