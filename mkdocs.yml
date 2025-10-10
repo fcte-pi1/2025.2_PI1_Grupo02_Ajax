@@ -9,7 +9,9 @@ nav:
   - Home:
       - Sobre: index.md
   - Another tab example:
-      - Test: ho.md
+      - Test: ho.md 
+  - Protótipo Alta Fidelidade: prototipo-alta-fidelidade/prototipo-alta-fidelidade.md
+      
 theme:
   logo: assets/LogoCadUn.png
   name: material

@@ -1,0 +1,8 @@
+.justify {
+  text-align: justify;
+}
+
+.indent {
+  text-align: justify;
+  text-indent: 2em;
+}
