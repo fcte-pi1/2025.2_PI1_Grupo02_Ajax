@@ -1,9 +1,11 @@
 # 3. Testes de Hardware
 
-| Código | Nome do Teste | Tipo | Objetivo | Pré-condições | Procedimento | Resultado Esperado | Requisito Relacionado |
-|--------|----------------|------|-----------|----------------|---------------|--------------------|------------------------|
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
+| Código | Nome do Teste            | Tipo     | Objetivo                                 | Pré-condições | Procedimento                                                                                                                                                                                                                                                                                                                                                                        | Resultado Esperado | Requisito Relacionado |
+| ------ | ------------------------ | -------- | ---------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------- |
+|        | Teste de alimentação     | Unitário | Confirmar tensão e corrente corretas.    |               | 1\. Conectar as pontas de prova de um multímetro na saída do regulador de tensão LM2596.<br>2\. Ligar a bateria.<br>3\. Anotar o valor da tensão (V).<br>4\. Conectar uma carga conhecida (ex: ESP32 e motores em repouso) e medir a tensão novamente.                                                                                                                              |                    |                       |
+|        | Teste dos motores DC     | Unitário | Validar rotação e consumo.               |               | 1\. Carregar um firmware de teste no ESP32 para acionar um motor por vez.<br>2\. Enviar comando para girar o motor 1 no sentido horário por 5 segundos.<br>3\. Enviar comando para girar o motor 1 no sentido anti-horário por 5 segundos.<br>4\. Repetir os passos 2 e 3 para todos os outros motores.                                                                             |                    |                       |
+|        | Teste do servomotor      | Unitário | Avaliar ângulo de abertura e fechamento. |               | 1\. Carregar um firmware de teste no ESP32.<br>2\. Enviar comando para posicionar o servo em 0° (posição fechada).<br>3\. Enviar comando para posicionar o servo em 90° (posição intermediária).<br>4\. Enviar comando para posicionar o servo em 180° (posição aberta).<br>5\. Observar o movimento em cada passo.                                                                 |                    |                       |
+|        | Teste do sensor MPU-6050 | Unitário | Confirmar leitura dos eixos.             |               | 1\. Carregar o código de calibração e leitura do sensor.<br>2\. Abrir o Monitor Serial para visualizar os dados.<br>3\. Com o carrinho parado em superfície plana, verificar se os valores de aceleração e giroscópio estão próximos de zero.<br>4\. Inclinar o carrinho para frente, para trás, e para os lados, confirmando que os dados nos eixos X e Y mudam de forma coerente. |                    |                       |
 
 
 
@@ -13,3 +15,4 @@
 | Versão | Data       | Descrição                                      | Autor               | Revisor            |
 |--------|------------|------------------------------------------------|---------------------|--------------------|
 | 1.0    | 11/10/2025 | Criação do documento | [João Pedro](https://github.com/JoaoPedrooSS)          |  [João Lucas](https://github.com/jlucasiqueira)  |
+| 1.1    | 11/10/2025 | Definição de rotinas para validação unitária de componentes eletrônicos. | [Johan Rocha](https://github.com/johan-rocha)          |  [João Lucas](https://github.com/jlucasiqueira)  |
