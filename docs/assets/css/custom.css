@@ -1,0 +1,9 @@
+.md-grid {
+  max-width: 80%;
+}
+
+/* Remove o fundo branco do container */
+.md-main__inner {
+  background: none;
+  box-shadow: none;
+}
