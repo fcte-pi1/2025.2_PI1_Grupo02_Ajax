@@ -17,7 +17,7 @@ Para o desenvolvimento e a criação de um protótipo interativo da interface, o
 ###
 
 <center>
-<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/proto/ky1MkqDNR5cY3QKCO4ARzh/Pi1?page-id=0%3A1&node-id=1-32&p=f&viewport=-2204%2C55%2C0.75&scaling=scale-down&content-scaling=fixed&embed-host=share" allowfullscreen></iframe>
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/proto/ky1MkqDNR5cY3QKCO4ARzh/Pi1?page-id=0%3A1&node-id=1-32&p=f&viewport=-489%2C427%2C0.38&scaling=scale-down&content-scaling=fixed&starting-point-node-id=1%3A32&embed-host=share" allowfullscreen></iframe>
 </center>
 
 ###
