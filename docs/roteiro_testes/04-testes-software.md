@@ -1,12 +1,12 @@
 # 4. Testes de Software (Backend, Firmware e Interface)
 
-| Código | Nome do Teste | Tipo | Objetivo | Pré-condições | Procedimento | Resultado Esperado | Requisito Relacionado |
-|--------|----------------|------|-----------|----------------|---------------|--------------------|------------------------|
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
-
-
-
+| Código | Nome do Teste                     | Tipo      | Objetivo                                           | Pré-condições | Procedimento                                                                                                                                                                                                                                                                                                                    | Resultado Esperado | Requisito Relacionado |
+| ------ | --------------------------------- | --------- | -------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------- |
+|        | Conexão Wi-Fi                     | Unitário  | Verificar estabilidade da conexão ESP32–Servidor.  |               | 1\. Ligar o ESP32.<br>2\. Observar os logs no Monitor Serial.<br>3\. Verificar se a mensagem "Conectado ao Wi-Fi" aparece.<br>4\. Verificar no log do servidor se a conexão do cliente (ESP32) foi registrada.<br>5\. Desligar e ligar o ESP32 3 vezes, confirmando a reconexão em todas.                                       |                    |                       |
+|        | Envio de comandos via interface   | Funcional | Testar endpoint /mission/start.                    |               | 1\. Utilizar uma ferramenta de API (como Postman ou Insomnia).<br>2\. Criar uma requisição POST para o endereço http://<ip-servidor>/mission/start.<br>3\. No corpo da requisição, inserir um JSON com uma sequência de comandos, ex: {"commands": ["forward 1", "turn 90"]}.<br>4\. Enviar a requisição e observar a resposta. |                    |                       |
+|        | Execução de missão no firmware    | Integrado | Validar tradução de comandos em movimento.         |               | 1\. Enviar via API (conforme teste S-02) uma missão simples: {"commands": ["forward 1", "turn 90"]}.<br>2\. Observar o comportamento do carrinho.<br>3\. Medir com uma fita métrica e um transferidor se o deslocamento e a rotação foram executados corretamente.                                                              |                    |                       |
+|        | Recepção e armazenamento de dados | Integrado | Confirmar persistência das leituras de trajetória. |               | 1\. Após a conclusão de uma missão (teste S-03), acessar o banco de dados.<br>2\. Executar uma query na tabela de telemetria ou trajetória, filtrando pelo ID da missão recém-concluída.<br>3\. Verificar se os registros de pose (x, y, theta) e timestamp foram criados.                                                      |                    |                       |
+|        | Geração de relatório              | Funcional | Verificar endpoint /mission/report.                |               | 1\. Utilizar uma ferramenta de API.<br>2\. Obter o ID da missão executada no teste S-02.<br>3\. Criar uma requisição GET para http://<ip-servidor>/mission/report?id=<ID_DA_MISSAO>.<br>4\. Enviar a requisição e analisar o JSON de resposta.                                                                                  |                    |                       |
 
 
 
@@ -18,3 +18,4 @@
 | Versão | Data       | Descrição                                      | Autor               | Revisor            |
 |--------|------------|------------------------------------------------|---------------------|--------------------|
 | 1.0    | 11/10/2025 | Criação do documento | [João Pedro](https://github.com/JoaoPedrooSS)          |  [João Lucas](https://github.com/jlucasiqueira)  |
+| 1.1    | 11/10/2025 | Descrição dos passos para testar a comunicação Wi-Fi, endpoints da API e lógica do firmware. | [Johan Rocha](https://github.com/johan-rocha)          |  [João Lucas](https://github.com/jlucasiqueira)  |
