@@ -1,9 +1,10 @@
 # 8. Testes de Sistema (Missão Completa)
 
-| Código | Nome do Teste | Tipo | Objetivo | Pré-condições | Procedimento | Resultado Esperado | Requisito Relacionado |
-|--------|----------------|------|-----------|----------------|---------------|--------------------|------------------------|
-|  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |
+| Código | Nome do Teste               | Tipo          | Objetivo                                     | Pré-condições | Procedimento                                                                                                                                                                                                                                                                                                             | Resultado Esperado | Requisito Relacionado |
+| ------ | --------------------------- | ------------- | -------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ | --------------------- |
+|        | Execução completa de missão | Sistema       | Validar operação ponta a ponta.              |               | 1\. Definir um ponto de partida (A) e um ponto de entrega (B).<br>2\. Enviar uma missão completa via interface: ir de A para B, acionar o servomotor para depositar a carga, e retornar para A.<br>3\. Acompanhar toda a execução física.<br>4\. Ao final, gerar e analisar o relatório da missão.                       |                    |                       |
+|        | Teste de carga frágil       | Funcional     | Garantir transporte seguro do “ovo”.         |               | 1\. Colocar um objeto frágil (ex: um ovo cru) no compartimento de carga.<br>2\. Executar a mesma missão do teste SYS-01.<br>3\. Observar a suavidade dos movimentos do carrinho, especialmente em acelerações, frenagens e curvas.<br>4\. Ao final da missão, inspecionar o objeto em busca de qualquer dano.            |                    |                       |
+|        | Teste de repetibilidade     | Não funcional | Avaliar consistência em múltiplas execuções. |               | 1\. Executar a missão completa do teste SYS-01.<br>2\. Ao final, registrar a posição final do carrinho a partir dos dados do relatório.<br>3\. Reposicionar o carrinho exatamente no ponto de partida.<br>4\. Repetir os passos 1 a 3 por um total de 5 vezes.<br>5\. Comparar as posições finais de todas as execuções. |                    |                       |
 
 
 
@@ -14,3 +15,4 @@
 | Versão | Data       | Descrição                                      | Autor               | Revisor            |
 |--------|------------|------------------------------------------------|---------------------|--------------------|
 | 1.0    | 11/10/2025 | Criação do documento | [João Pedro](https://github.com/JoaoPedrooSS)          |  [João Lucas](https://github.com/jlucasiqueira)  |
+| 1.1    | 11/10/2025 | Elaboração do passo a passo para testes de estabilidade e capacidade de carga. | [Johan Rocha](https://github.com/johan-rocha)          |  [João Lucas](https://github.com/jlucasiqueira)  |
