@@ -1,4 +1,4 @@
-# Documento de arquitetura de softaware
+# Documento de arquitetura de software
 
 ## Ambiente Local
 
