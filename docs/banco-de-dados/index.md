@@ -33,7 +33,7 @@ Analisar os dados de cada missão é importante para entender pontos-chave, como
 Para garantir a qualidade e a validade dos dados, as seguintes regras de negócio são aplicadas durante a coleta e o processamento:
 
 * **Integridade do Ângulo:** O valor do `angulo` deve ser sempre entre 0 e 360 graus.
-* **Validade da Aceleração:** O valor de `aceleraca` não pode ser negativo.
+* **Validade da Aceleração:** O valor de `aceleracao` não pode ser muito pequena (e.g. 0.00001).
 * **Validade do Percurso:** A `distancia` de um percurso não pode ser negativa.
 
 ### Tabela de Análise de Dados Fictícios
