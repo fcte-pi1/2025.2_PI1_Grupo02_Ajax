@@ -21,6 +21,8 @@ nav:
       - 7. Testes de Interface e Usabilidade: roteiro_testes/07-testes-interface-usabilidade.md
       - 8. Testes de Sistema: roteiro_testes/08-testes-sistema.md
       - 9. Critérios de Aceite: roteiro_testes/09-criterios-aceite.md
+  - Arquitetura de software:
+      - system design: arquitetura/arquitetura-de-software.md
 theme:
   logo: assets/LogoCadUn.png
   name: material
