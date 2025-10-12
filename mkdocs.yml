@@ -11,6 +11,8 @@ nav:
   - Protótipo Alta Fidelidade: prototipo-alta-fidelidade/prototipo-alta-fidelidade.md
   - Arquitetura do hardware:
       - Diagrama de blocos: arquitetura/blocos.md
+  - Arquitetura de software:
+      - system design: arquitetura/arquitetura-de-software.md
 theme:
   logo: assets/LogoCadUn.png
   name: material
