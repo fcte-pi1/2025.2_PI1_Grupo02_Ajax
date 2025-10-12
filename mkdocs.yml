@@ -8,6 +8,7 @@ markdown_extensions:
 nav:
   - Home:
       - Sobre: index.md
+  - Protótipo Alta Fidelidade: prototipo-alta-fidelidade/prototipo-alta-fidelidade.md
   - Arquitetura do hardware:
       - Diagrama de blocos: arquitetura/blocos.md
   - Testes:

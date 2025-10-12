@@ -6,4 +6,11 @@
 .md-main__inner {
   background: none;
   box-shadow: none;
+.justify {
+  text-align: justify;
+}
+
+.indent {
+  text-align: justify;
+  text-indent: 2em;
 }
