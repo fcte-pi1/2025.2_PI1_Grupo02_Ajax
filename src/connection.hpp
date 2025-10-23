@@ -7,9 +7,21 @@
 #define CONNECTION_HPP
 
 #include "internals.hpp"
+#include "packet.hpp"
+
+enum ConnectionState_t {
+  UNINITIALIZED = 0,
+  WAITING_CONNECTION = 1,
+  WAITING_HANDSHAKE = 2,
+  CONNECTED = 3,
+};
 
 namespace connection {
-  static boolean is_initialized = false;
+  namespace constants {
+    static constexpr size_t MAX_BUFFER_SIZE = 64;
+  }
+
+  static ConnectionState_t state = UNINITIALIZED;
 
   WiFiServer server(8080);
   WiFiClient client;
@@ -19,8 +31,8 @@ namespace connection {
   inline
   auto attempt_connection( ) -> bool {
     // Checamos se o servidor ainda não foi inicializado.
-    if ( !is_initialized ) {
-      is_initialized = true;
+    if ( state == UNINITIALIZED ) {
+      state = WAITING_CONNECTION;
 
       server.begin();
       server.setNoDelay(true);
@@ -30,8 +42,10 @@ namespace connection {
 
     // Se não estamos conectados, vamos tentar uma conexão.
     if ( !is_connected ) {
-      if (( client = server.available() )) {
-        Serial.println("[INFO] Cliente conectado com sucesso!");
+      if ( ( client = server.available() ) ) {
+        state = WAITING_HANDSHAKE;
+
+        Serial.println("[INFO] Possivel cliente conectado, enviando handshake.");
       }
     }
 
@@ -41,9 +55,49 @@ namespace connection {
     return is_connected;
   }
 
+  auto receive_packets( ) -> void {
+    if ( !client.available() ) {
+      return;
+    }
+
+    // Checamos se estamos esperando o handshake do backend.
+    if ( state == WAITING_HANDSHAKE ) {
+      char type = client.read();
+
+      // Se o pacote recebido começa com 0x01, isso significa que recebemos o handshake de volta.
+      if (type == static_cast<uint8_t>(PacketType_t::HANDSHAKE)) {
+        Serial.println("[INFO] Handshake recebido, cliente conectado com sucesso!");
+
+        // Confirmada conexão.
+        state = CONNECTED;
+      }
+    }
+
+    else if ( state == CONNECTED ) {
+      char buffer[constants::MAX_BUFFER_SIZE];
+
+      size_t packet_size = client.readBytesUntil(0x3f, buffer, constants::MAX_BUFFER_SIZE);
+
+      Serial.print("[INFO] Recebido pacote: ");
+      for (size_t i = 0; i < packet_size; ++i)
+        Serial.printf(" %x\n", buffer[i]);
+    }
+  }
+
+  auto send_packets( ) -> void {
+    // Checamos se temos que enviar o handshake pro backend.
+    if (state == WAITING_HANDSHAKE) {
+      // Criamos um novo pacote de handshake.
+      static const auto handshake = Packet_t<>::handshake();
+
+      client.write(handshake.data(), handshake.size());
+    }
+  }
+
   inline
   auto handle_connection( ) -> void {
-    client.println("Ola!");
+    receive_packets( );
+    send_packets( );
   }
 }
 
