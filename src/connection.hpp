@@ -47,6 +47,12 @@ namespace connection {
 
         Serial.println("[INFO] Possivel cliente conectado, enviando handshake.");
       }
+
+      else if ( state != WAITING_CONNECTION ) {
+        state = WAITING_CONNECTION;
+
+        Serial.println("[INFO] Cliente desconectado, pronto para reconexao.");
+      }
     }
 
     digitalWrite(internals::pins::LED_BUILTIN,
@@ -65,7 +71,7 @@ namespace connection {
       char type = client.read();
 
       // Se o pacote recebido começa com 0x01, isso significa que recebemos o handshake de volta.
-      if (type == static_cast<uint8_t>(PacketType_t::HANDSHAKE)) {
+      if ( type == static_cast<uint8_t>(PacketType_t::HANDSHAKE) ) {
         Serial.println("[INFO] Handshake recebido, cliente conectado com sucesso!");
 
         // Confirmada conexão.
@@ -86,7 +92,7 @@ namespace connection {
 
   auto send_packets( ) -> void {
     // Checamos se temos que enviar o handshake pro backend.
-    if (state == WAITING_HANDSHAKE) {
+    if ( state == WAITING_HANDSHAKE ) {
       // Criamos um novo pacote de handshake.
       static const auto handshake = Packet_t<>::handshake();
 
