@@ -12,30 +12,24 @@
 namespace internals {
   namespace pins {
     // LED acoplado ao microcontrolador.
-    static constexpr
-    uint8_t LED_BUILTIN = 2u;
+    static constexpr uint8_t LED_BUILTIN = 2u;
   }
 
   namespace constants {
     // Taxa de comunicação UART serial.
-    static constexpr
-    unsigned long BAUD_RATE = 115200u;
+    static constexpr unsigned long BAUD_RATE = 115200u;
 
     // Nome da rede de WIFI roteada pelo microcontrolador.
-    static constexpr
-    const char* SSID = "ESP Network";
+    static constexpr const char* SSID = "ESP Network";
 
     // Senha da rede de WIFI roteada pelo microcontrolador.
-    static constexpr
-    const char* PASSWORD = "87654321";
+    static constexpr const char* PASSWORD = "87654321";
 
     // O endereço de IP estático do microcontrolador.
-    static const
-    IPAddress STATIC_IP_ADDR(192, 168, 4, 1);
+    static const IPAddress STATIC_IP_ADDR(192, 168, 4, 1);
 
     // O gateway da rede WIFI do microcontrolador.
-    static const
-    IPAddress GATEWAY(255, 255, 255, 0);
+    static const IPAddress GATEWAY(255, 255, 255, 0);
   }
 
   /// @brief Configura todos os pinos de GPIO utilizados pela ESP32.
