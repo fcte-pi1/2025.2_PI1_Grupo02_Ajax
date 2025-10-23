@@ -1,0 +1,6 @@
+CompileFlags:
+      Add: [
+            -IC:/Users/caiou/.platformio/packages/framework-arduinoespressif32/cores/esp32,
+            -IC:/Users/caiou/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src,
+            -IC:/Users/caiou/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/freertos
+      ]
