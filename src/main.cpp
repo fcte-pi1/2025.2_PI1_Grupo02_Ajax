@@ -18,5 +18,8 @@ void loop() {
         return;
     }
 
+    // Realiza a conexão com o cliente.
+    connection::handle_connection( );
+
     delay(100);
 }

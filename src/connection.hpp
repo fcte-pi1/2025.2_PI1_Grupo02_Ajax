@@ -29,6 +29,11 @@ namespace connection {
 
     return is_connected;
   }
+
+  inline
+  auto handle_connection( ) -> void {
+    client.println("Ola!");
+  }
 }
 
 #endif
