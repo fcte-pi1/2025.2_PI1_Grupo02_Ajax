@@ -7,20 +7,29 @@
 #define PACKET_HH
 
 enum PacketType_t : unsigned char {
-  HANDSHAKE = 0x1
+  HANDSHAKE = 0x01,
+  MOVE = 0x02,
+  TURN = 0x03,
+  STATUS = 0x04
 };
 
-template<size_t S = 2>
+template<size_t S = 0>
 class Packet_t {
 public:
-  using DataArray_t = unsigned char[S];
+  using DataArray_t = unsigned char[S + 1];
 
 public:
+  explicit Packet_t(PacketType_t type) {
+    type_ = type;
+    data_[0] = static_cast<unsigned char>(type);
+  }
+
   explicit Packet_t(PacketType_t type, DataArray_t data) {
     type_ = type;
+    data_[0] = static_cast<unsigned char>(type);
 
-    for (size_t i = 0; i < S; ++i)
-      data_[i] = data[i];
+    for (size_t i = 1; i < S + 1; ++i)
+      data_[i] = data[i - 1];
   }
 
   [[nodiscard]] size_t size() const noexcept {
@@ -35,14 +44,7 @@ public:
     return data_;
   }
 
-public:
-  static Packet_t<1> handshake() {
-    unsigned char bytes[] = { 0x1 };
-
-    return Packet_t<1>( PacketType_t::HANDSHAKE, bytes );
-  }
-
-private:
+  private:
   PacketType_t type_;
   DataArray_t data_;
 };

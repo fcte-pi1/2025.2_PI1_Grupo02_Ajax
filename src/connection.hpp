@@ -18,7 +18,8 @@ enum ConnectionState_t {
 
 namespace connection {
   namespace constants {
-    static constexpr size_t MAX_BUFFER_SIZE = 64;
+    // Tamanho máximo de cada pacote.
+    static constexpr size_t MAX_BUFFER_SIZE = 256;
   }
 
   static ConnectionState_t state = UNINITIALIZED;
@@ -61,7 +62,9 @@ namespace connection {
     return is_connected;
   }
 
+  /// @brief Lida com os pacotes recebidos do back-end.
   auto receive_packets( ) -> void {
+    // Vemos se temos bytes a serem lidos.
     if ( !client.available() ) {
       return;
     }
@@ -90,16 +93,18 @@ namespace connection {
     }
   }
 
+  /// @brief Lida com os pacotes sendo enviados ao back-end.
   auto send_packets( ) -> void {
     // Checamos se temos que enviar o handshake pro backend.
     if ( state == WAITING_HANDSHAKE ) {
       // Criamos um novo pacote de handshake.
-      static const auto handshake = Packet_t<>::handshake();
+      static const auto handshake = Packet_t<>( PacketType_t::HANDSHAKE );
 
       client.write(handshake.data(), handshake.size());
     }
   }
 
+  /// @brief Executa a comunicação bidirecional com o back-end.
   inline
   auto handle_connection( ) -> void {
     receive_packets( );
