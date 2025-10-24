@@ -98,7 +98,7 @@ namespace connection {
     // Checamos se temos que enviar o handshake pro backend.
     if ( state == WAITING_HANDSHAKE ) {
       // Criamos um novo pacote de handshake.
-      static const auto handshake = Packet_t<>( PacketType_t::HANDSHAKE );
+      static const auto handshake = packet_builder::create_handshake( );
 
       client.write(handshake.data(), handshake.size());
     }

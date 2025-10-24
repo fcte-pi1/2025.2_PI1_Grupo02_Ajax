@@ -49,4 +49,13 @@ public:
   DataArray_t data_;
 };
 
+namespace packet_builder {
+  /// @brief Cria um novo pacote de handshake.
+  /// @returns O pacote
+  inline
+  auto create_handshake( ) -> Packet_t<> {
+    return Packet_t<>( PacketType_t::HANDSHAKE );
+  }
+}
+
 #endif
