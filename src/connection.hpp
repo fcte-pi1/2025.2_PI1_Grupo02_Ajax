@@ -22,6 +22,7 @@ namespace connection {
     static constexpr size_t MAX_BUFFER_SIZE = 256;
   }
 
+  // Estado atual da máquina de comunicação.
   static ConnectionState_t state = UNINITIALIZED;
 
   WiFiServer server(8080);
@@ -101,6 +102,13 @@ namespace connection {
       static const auto handshake = packet_builder::create_handshake( );
 
       client.write(handshake.data(), handshake.size());
+    }
+
+    else if ( state == CONNECTED ) {
+      static const auto move_test = packet_builder::create_move( 150 );
+
+      client.write(move_test.data(), move_test.size());
+      delay(500);
     }
   }
 
