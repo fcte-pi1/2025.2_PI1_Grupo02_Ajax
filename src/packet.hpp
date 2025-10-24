@@ -36,10 +36,10 @@ public:
   }
 
 public:
-  static Packet_t<2> handshake() {
-    unsigned char bytes[] = { 0x1, 0x0 };
+  static Packet_t<1> handshake() {
+    unsigned char bytes[] = { 0x1 };
 
-    return Packet_t<2>( PacketType_t::HANDSHAKE, bytes );
+    return Packet_t<1>( PacketType_t::HANDSHAKE, bytes );
   }
 
 private:
