@@ -1,25 +1,25 @@
-#include "internals.hpp"
 #include "connection.hpp"
+#include "internals.hpp"
 
 void setup() {
   // Inicializa comunicação serial e configura pinos de GPIO.
-  internals::initialize_serial( );
-  internals::initialize_pins( );
+  internals::initialize_serial();
+  internals::initialize_pins();
 
   // Inicializa ponto de acesso WIFI.
-  while ( !internals::initialize_wifi( ) )
+  while (!internals::initialize_wifi())
     delay(1000);
 }
 
 void loop() {
-    // Tentamos conectar ao cliente.
-    if ( !connection::attempt_connection( ) ) {
-        delay(1000);
-        return;
-    }
+  // Tentamos conectar ao cliente.
+  if (!connection::attempt_connection()) {
+    delay(1000);
+    return;
+  }
 
-    // Realiza a conexão com o cliente.
-    connection::handle_connection( );
+  // Realiza a conexão com o cliente.
+  connection::handle_connection();
 
-    delay(100);
+  delay(100);
 }
