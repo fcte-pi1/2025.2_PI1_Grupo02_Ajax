@@ -63,7 +63,7 @@ auto create_move(uint16_t distance_cm) -> Packet_t<2> {
   // Formatação litte-endian.
   uint8_t data[] = {lower, higher};
 
-  return Packet_t<2>(PacketType_t::WAIT, data);
+  return Packet_t<2>(PacketType_t::MOVE, data);
 }
 } // namespace packet_builder
 
