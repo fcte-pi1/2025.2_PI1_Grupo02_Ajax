@@ -1,8 +1,31 @@
 import socket
+import select
+import time
 from packet import Packet, PacketType
 
+# IP e porta da ESP32
 HOST = "192.168.4.1"
 PORT = 8080
+
+
+def receive_packets():
+    # Recebemos um pacote e fazemos o que quiser com os dados
+    data = sock.recv(1024)
+    packet = Packet.from_bytes(data)
+
+    print(f"Tipo: {packet.type}, dados: {packet.data}")
+
+
+def send_packets():
+    # Criamos dois pacotes e enviamo-os.
+    move_150 = Packet.move(150)
+    turn_90 = Packet.turn(90)
+
+    sock.send(move_150.data)
+    time.sleep(0.1)
+    sock.send(turn_90.data)
+    time.sleep(0.1)
+
 
 if __name__ == "__main__":
     # Criação da conexão TCP
@@ -21,3 +44,14 @@ if __name__ == "__main__":
         if handshake[0] == PacketType.HANDSHAKE.to_number():
             sock.send(Packet.handshake().data)
             received_handshake = True
+
+    while True:
+        # Checamos se temos pacotes a receber.
+        incoming, _, _ = select.select([sock], [], [])
+
+        # Se sim, lemos os pacotes.
+        if len(incoming) > 0:
+            receive_packets()
+
+        # Enviando pacotes agora.
+        send_packets()
