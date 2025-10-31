@@ -13,11 +13,13 @@ PACKET_SIZE = 3
 
 def split_packets(data: bytes) -> list[bytes]:
     if len(data) % PACKET_SIZE != 0:
-        return []
+        return {}
 
     list = {}
+    n = 0
     for i in range(0, len(data), PACKET_SIZE):
-        list[i] = data[i : i + PACKET_SIZE]
+        list[n] = bytes(data[i : i + PACKET_SIZE])
+        n = n + 1
 
     return list
 
@@ -35,7 +37,8 @@ def receive_packets():
     print(f"Recebido {len(packets)} pacotes")
 
     # Iteramos para cada pacote
-    for chunk in packets:
+    for i in range(len(packets)):
+        chunk = packets[i]
         packet = Packet.from_bytes(chunk)
 
         if packet.type == PacketType.NONE:
