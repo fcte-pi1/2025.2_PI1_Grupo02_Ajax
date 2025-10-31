@@ -15,7 +15,7 @@ def split_packets(data: bytes) -> list[bytes]:
     if len(data) % PACKET_SIZE != 0:
         return []
 
-    list = []
+    list = {}
     for i in range(0, len(data), PACKET_SIZE):
         list[i] = data[i : i + PACKET_SIZE]
 
@@ -54,12 +54,6 @@ def send_packets():
 
 
 def run_networking():
-    # Criação da conexão TCP
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    # Conexão com a ESP32
-    sock.connect((HOST, PORT))
-
     received_handshake = False
 
     # Esperando o handshake da ESP32 para efetuarmos a conexão.
@@ -86,6 +80,12 @@ def run_networking():
 
 
 if __name__ == "__main__":
+    # Criação da conexão TCP
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Conexão com a ESP32
+    sock.connect((HOST, PORT))
+
     # IMPORTANTE!
     # Criando uma nova thread para não paramos o funcionamento do back-end
     network_thread = threading.Thread(target=run_networking)
