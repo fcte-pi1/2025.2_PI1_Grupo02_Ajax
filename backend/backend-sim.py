@@ -8,12 +8,32 @@ HOST = "192.168.4.1"
 PORT = 8080
 
 
-def receive_packets():
-    # Recebemos um pacote e fazemos o que quiser com os dados
-    data = sock.recv(1024)
-    packet = Packet.from_bytes(data)
+def split_packets(data: bytes) -> list[bytes]:
+    if len(data) % 3 != 0:
+        return []
 
-    print(f"Tipo: {packet.type}, dados: {packet.data.decode()}")
+    list = []
+    for i in range(0, len(data), 3):
+        list[i] = data[i : i + 3]
+
+    return list
+
+
+def receive_packets():
+    # Recebemos dados brutos da ESP32, vamos dividi-los em pacotes.
+    data = sock.recv(1024)
+    packets = split_packets(data)
+
+    print(f"Recebido {len(packets)} pacotes")
+
+    # Iteramos para cada pacote
+    for packet in packets:
+        packet = Packet.from_bytes(data)
+
+        if packet.type == PacketType.NONE:
+            print("Recebido pacote invalido")
+
+        print(f"Tipo: {packet.type}, dados: {packet.data.decode()}")
 
 
 def send_packets():
@@ -22,9 +42,7 @@ def send_packets():
     turn_90 = Packet.turn(90)
 
     sock.send(move_150.data)
-    time.sleep(0.1)
     sock.send(turn_90.data)
-    time.sleep(0.1)
 
 
 if __name__ == "__main__":
@@ -49,9 +67,15 @@ if __name__ == "__main__":
         # Checamos se temos pacotes a receber.
         incoming, _, _ = select.select([sock], [], [], 0.1)
 
+        amount_of_bytes = len(incoming)
+
         # Se sim, lemos os pacotes.
-        if len(incoming) > 0:
-            receive_packets()
+        if amount_of_bytes > 0:
+            # Checando se a quantidade de bytes pode ser dividida igualmente em pacotes.
+            if amount_of_bytes % 3 != 0:
+                print(f"Recebido {amount_of_bytes} pacotes invalidos.")
+            else:
+                receive_packets()
 
         # Enviando pacotes agora.
         send_packets()

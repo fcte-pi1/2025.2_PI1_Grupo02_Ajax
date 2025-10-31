@@ -110,11 +110,11 @@ auto receive_packets() -> void {
     Serial.printf("[INFO] Recebido pacote de %d bytes.\n", packet_size);
 
     switch (buffer[0]) {
-    case PacketType_t::MOVE:
+    case static_cast<uint8_t>(PacketType_t::MOVE):
       Serial.printf("[PACKET] Movimento: %dcm\n", (buffer[1] << 8) + buffer[2]);
       break;
 
-    case PacketType_t::TURN:
+    case static_cast<uint8_t>(PacketType_t::TURN):
       Serial.printf("[PACKET] Rotacao: %ddeg\n", (buffer[1] << 8) + buffer[2]);
       break;
 
