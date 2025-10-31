@@ -24,6 +24,11 @@ def receive_packets():
     data = sock.recv(1024)
     packets = split_packets(data)
 
+    # Garantimos que temos pacotes para ler, caso contrário, temos pacotes inválidos
+    if len(packets) < 0:
+        print(f"Recebidos {len(data)} bytes invalidos")
+        return
+
     print(f"Recebido {len(packets)} pacotes")
 
     # Iteramos para cada pacote
@@ -67,15 +72,11 @@ if __name__ == "__main__":
         # Checamos se temos pacotes a receber.
         incoming, _, _ = select.select([sock], [], [], 0.1)
 
-        amount_of_bytes = len(incoming)
+        data_available = len(incoming) > 0
 
         # Se sim, lemos os pacotes.
-        if amount_of_bytes > 0:
-            # Checando se a quantidade de bytes pode ser dividida igualmente em pacotes.
-            if amount_of_bytes % 3 != 0:
-                print(f"Recebido {amount_of_bytes} pacotes invalidos.")
-            else:
-                receive_packets()
+        if data_available:
+            receive_packets()
 
         # Enviando pacotes agora.
         send_packets()
