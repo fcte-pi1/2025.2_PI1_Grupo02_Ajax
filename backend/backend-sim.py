@@ -13,7 +13,7 @@ def receive_packets():
     data = sock.recv(1024)
     packet = Packet.from_bytes(data)
 
-    print(f"Tipo: {packet.type}, dados: {packet.data}")
+    print(f"Tipo: {packet.type}, dados: {packet.data.decode()}")
 
 
 def send_packets():
@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     while True:
         # Checamos se temos pacotes a receber.
-        incoming, _, _ = select.select([sock], [], [])
+        incoming, _, _ = select.select([sock], [], [], 0.1)
 
         # Se sim, lemos os pacotes.
         if len(incoming) > 0:

@@ -38,9 +38,9 @@ class Packet:
     @staticmethod
     def move(cm: int):
         """Cria um novo pacote de movimento, em centímetros"""
-        return Packet(PacketType.MOVE, cm.to_bytes(2, "little"))
+        return Packet(PacketType.MOVE, cm.to_bytes(2, "big"))
 
     @staticmethod
     def turn(deg: int):
         """Cria um novo pacote de rotação, em graus"""
-        return Packet(PacketType.MOVE, deg.to_bytes(2, "little"))
+        return Packet(PacketType.TURN, deg.to_bytes(2, "big"))
