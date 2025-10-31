@@ -1,6 +1,5 @@
 import socket
-import time
-from packet_type import Packet, PacketType
+from packet import Packet, PacketType
 
 HOST = "192.168.4.1"
 PORT = 8080
@@ -12,11 +11,13 @@ if __name__ == "__main__":
     # Conexão com a ESP32
     sock.connect((HOST, PORT))
 
-    initialized = False
+    received_handshake = False
 
-    while not initialized:
+    # Esperando o handshake da ESP32 para efetuarmos a conexão.
+    while not received_handshake:
         handshake = sock.recv(1024)
 
+        # Enviamos o handshake de volta.
         if handshake[0] == PacketType.HANDSHAKE.to_number():
             sock.send(Packet.handshake().data)
-            initialized = True
+            received_handshake = True
