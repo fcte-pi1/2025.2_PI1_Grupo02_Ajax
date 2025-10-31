@@ -1,5 +1,6 @@
 import socket
 import select
+import threading
 import time
 from packet import Packet, PacketType
 
@@ -7,14 +8,16 @@ from packet import Packet, PacketType
 HOST = "192.168.4.1"
 PORT = 8080
 
+PACKET_SIZE = 3
+
 
 def split_packets(data: bytes) -> list[bytes]:
-    if len(data) % 3 != 0:
+    if len(data) % PACKET_SIZE != 0:
         return []
 
     list = []
-    for i in range(0, len(data), 3):
-        list[i] = data[i : i + 3]
+    for i in range(0, len(data), PACKET_SIZE):
+        list[i] = data[i : i + PACKET_SIZE]
 
     return list
 
@@ -50,7 +53,7 @@ def send_packets():
     sock.send(turn_90.data)
 
 
-if __name__ == "__main__":
+def run_networking():
     # Criação da conexão TCP
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -80,3 +83,15 @@ if __name__ == "__main__":
 
         # Enviando pacotes agora.
         send_packets()
+
+
+if __name__ == "__main__":
+    # IMPORTANTE!
+    # Criando uma nova thread para não paramos o funcionamento do back-end
+    network_thread = threading.Thread(target=run_networking)
+    network_thread.start()
+
+    # Backend...
+    while True:
+        print("Rodando...")
+        time.sleep(5)
