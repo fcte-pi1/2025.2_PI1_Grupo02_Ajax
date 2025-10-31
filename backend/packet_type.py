@@ -7,6 +7,9 @@ class PacketType(Enum):
     TURN = b"\x03"
     STATUS = b"\x04"
 
+    def to_number(self):
+        return int.from_bytes(self.value)
+
 
 class Packet:
     def __init__(self, type: PacketType, data: bytes | None) -> None:

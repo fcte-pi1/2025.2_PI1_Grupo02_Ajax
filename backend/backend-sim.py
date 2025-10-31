@@ -1,6 +1,6 @@
 import socket
 import time
-from .packet_type import Packet, PacketType
+from packet_type import Packet, PacketType
 
 HOST = "192.168.4.1"
 PORT = 8080
@@ -17,6 +17,6 @@ if __name__ == "__main__":
     while not initialized:
         handshake = sock.recv(1024)
 
-        if handshake[0] == PacketType.HANDSHAKE:
+        if handshake[0] == PacketType.HANDSHAKE.to_number():
             sock.send(Packet.handshake().data)
             initialized = True
