@@ -11,7 +11,7 @@
 #define LOWER_BYTE (0xFF)
 #define HIGHER_BYTE (0xFF00)
 
-enum PacketType_t : uint8_t { HANDSHAKE = 1, MOVE = 2, TURN = 3, WAIT = 4 };
+enum PacketType_t : uint8_t { HANDSHAKE = 1, MOVE = 2, TURN = 3, STATUS = 4 };
 
 template <size_t S = 0> class Packet_t {
 public:

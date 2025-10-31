@@ -122,6 +122,7 @@ namespace connection {
         break;
 
       default:
+        Serial.println("[PACKET] Pacote nao reconhecido recebido!");
         break;
       }
     }
