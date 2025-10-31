@@ -35,8 +35,8 @@ def receive_packets():
     print(f"Recebido {len(packets)} pacotes")
 
     # Iteramos para cada pacote
-    for packet in packets:
-        packet = Packet.from_bytes(data)
+    for chunk in packets:
+        packet = Packet.from_bytes(chunk)
 
         if packet.type == PacketType.NONE:
             print("Recebido pacote invalido")
