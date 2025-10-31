@@ -41,7 +41,7 @@ def receive_packets():
         if packet.type == PacketType.NONE:
             print("Recebido pacote invalido")
 
-        print(f"Tipo: {packet.type}, dados: {packet.data.decode()}")
+        print(f"Tipo: {packet.type}, dados: {packet.data}")
 
 
 def send_packets():
