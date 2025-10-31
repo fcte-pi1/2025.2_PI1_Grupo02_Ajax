@@ -6,6 +6,7 @@
 #ifndef PACKET_HH
 #define PACKET_HH
 
+#include "connection.hpp"
 #include <cstdint>
 
 #define LOWER_BYTE (0xFF)
@@ -49,10 +50,6 @@ auto create_handshake() -> Packet_t<> {
   return Packet_t<>(PacketType_t::HANDSHAKE);
 }
 
-/// @brief Cria um novo pacote de espera.
-/// @returns O pacote
-auto create_wait() -> Packet_t<> { return Packet_t<>(PacketType_t::WAIT); }
-
 /// @brief Cria um novo pacote de movimento linear.
 /// @param distance_cm A Distância em centímetros.
 /// @returns O pacote
@@ -64,6 +61,25 @@ auto create_move(uint16_t distance_cm) -> Packet_t<2> {
   uint8_t data[] = {lower, higher};
 
   return Packet_t<2>(PacketType_t::MOVE, data);
+}
+
+/// @brief Cria um novo pacote de movimento linear.
+/// @param distance_cm A Distância em centímetros.
+/// @returns O pacote
+auto create_turn(uint16_t degrees) -> Packet_t<2> {
+  uint8_t lower = (degrees & HIGHER_BYTE) >> 8;
+  uint8_t higher = degrees & LOWER_BYTE;
+
+  // Formatação litte-endian.
+  uint8_t data[] = {lower, higher};
+
+  return Packet_t<2>(PacketType_t::TURN, data);
+}
+
+auto create_status(ConnectionState_t status) -> Packet_t<2> {
+  uint8_t data[] = {0, static_cast<uint8_t>(status)};
+
+  return Packet_t<2>(PacketType_t::STATUS, data);
 }
 } // namespace packet_builder
 
