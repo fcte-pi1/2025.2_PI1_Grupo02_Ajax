@@ -1,11 +1,12 @@
 #include "connection.hpp"
 #include "internals.hpp"
+#include "accsensor.hpp"
 
 void setup() {
   // Inicializa comunicação serial e configura pinos de GPIO.
   internals::initialize_serial();
   internals::initialize_pins();
-
+  accsensor::setupmpu(); //watch out, this will wait until serial monitor is working.
   // Inicializa ponto de acesso WIFI.
   while (!internals::initialize_wifi())
     delay(1000);
@@ -20,6 +21,10 @@ void loop() {
 
   // Realiza a conexão com o cliente.
   connection::handle_connection();
+  
+  if(accsensor::mpu.begin()){
+    accsensor::readsensor_toserial();
+  }
 
   delay(100);
 }
