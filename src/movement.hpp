@@ -18,7 +18,7 @@ enum class MovementType : uint8_t {
 
 struct MovementNode {
   MovementType type;
-  uint16_t amount;
+  uint16_t value;
 }
 
 namespace movement_queue {
@@ -29,7 +29,7 @@ namespace movement_queue {
 
   static size_t queue_it{};
   static size_t queue_size{};
-  static MovementNode queue[constants::MAX_MOVEMENT_QUEUE_SIZE] = {0};
+  static MovementNode queue[constants::MAX_MOVEMENT_QUEUE_SIZE] = {};
 
   // @brief Retorna a quantidade total de comandos na fila.
   auto

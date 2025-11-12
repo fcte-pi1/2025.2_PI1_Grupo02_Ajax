@@ -113,13 +113,18 @@ auto receive_packets() -> void {
 
     switch (buffer[0]) {
     case static_cast<uint8_t>(PacketType_t::MOVE):
-      movement_queue::add_forward((buffer[1] << 8) + buffer[2]);
+      uint16_t cm = (buffer[1] << 8) + buffer[2];
+
+      Serial.printf("[PACKET] Recebido pacote de movimento, cm: %d.\n", cm);
+      movement_queue::add_forward(cm);
       break;
 
     case static_cast<uint8_t>(PacketType_t::TURN):
+      Serial.printf("[PACKET] Recebido pacote de rotacao, direcao: %s.\n", buffer[2] ? "esquerda" : "direita");
+
       buffer[2] 
         ? movement_queue::add_turn_left() 
-        : movement_queue:add_turn_right();
+        : movement_queue::add_turn_right();
       break;
 
     default:
