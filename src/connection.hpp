@@ -8,6 +8,8 @@
 
 #include "internals.hpp"
 #include "packet.hpp"
+#include "movement.hpp"
+
 #include <cstdint>
 
 /// Define o estado da conexão com o back-end.
@@ -111,11 +113,13 @@ auto receive_packets() -> void {
 
     switch (buffer[0]) {
     case static_cast<uint8_t>(PacketType_t::MOVE):
-      Serial.printf("[PACKET] Movimento: %dcm\n", (buffer[1] << 8) + buffer[2]);
+      movement_queue::add_forward((buffer[1] << 8) + buffer[2]);
       break;
 
     case static_cast<uint8_t>(PacketType_t::TURN):
-      Serial.printf("[PACKET] Rotacao: %ddeg\n", (buffer[1] << 8) + buffer[2]);
+      buffer[2] 
+        ? movement_queue::add_turn_left() 
+        : movement_queue:add_turn_right();
       break;
 
     default:

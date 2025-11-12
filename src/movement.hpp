@@ -51,19 +51,24 @@ namespace movement_queue {
 
   // @brief Retorna o comando atual.
   auto
-  top( ) -> MovementNode {
-    return queue[queue_it];
-  }
-
-  // @brief Rertorna o comando atual e passa para o proximo.
-  auto
-  get_and_consume( ) -> MovementNode {
-    if (queue_it >= queue_size) {
-      Serial.println("[ERRO] Impossivel percorrer a fila visto que chegamos ao final da fila.");
-      return;
+  top( ) -> MovementNode* {
+    if (empty( )) {
+      Serial.println("[ERRO] Impossivel pegar o comando atual visto que a fila ta vazia.");
+      return NULL;
     }
 
-    return queue[queue_it++];
+    return &queue[queue_it];
+  }
+
+  // @brief Retorna o comando atual e passa para o proximo.
+  auto
+  get_and_consume( ) -> MovementNode* {
+    if (empty( )) {
+      Serial.println("[ERRO] Impossivel percorrer a fila visto que chegamos ao final da fila.");
+      return NULL;
+    }
+
+    return &queue[queue_it++];
   }
 
   // @brief Reinicia a fila.
@@ -119,6 +124,43 @@ namespace movement {
     inline constexpr uint16_t MAX_SPEED = 75;
     inline constexpr uint16_t MIN_SPEED = 0;
   } // namespace constants
+
+  auto
+  run( ) -> void {
+    if (movement_queue::empty( ))
+      return;
+
+    MovementNode* current = movement_queue::get_and_consume( );
+
+    if (current == NULL) {
+      // @TODO: Enviar erro para o back-end.
+      Serial.println("[ERRO] A fila de comandos retornou um valor invalido!");
+      return;
+    }
+
+    // @TODO: Calibragem.
+    switch (current->type) {
+      case MovementType::FORWARD:
+        move_forwards( );
+        delay(1000);
+        break;
+
+      case MovementType::BACKWARD:
+        move_backwards( );
+        delay(1000);
+        break;
+
+      case MovementType::LEFT:
+        turn_left( );
+        delay(1000);
+        break;
+
+      case MovementType::RIGHT:
+        turn_right( );
+        delay(1000);
+        break;
+    }
+  } 
 
   // @brief Para todo o movimento do carrinho.
   auto

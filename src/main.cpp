@@ -8,7 +8,7 @@ void setup() {
   internals::initialize_serial();
   internals::initialize_pins();
 
-  //accsensor::setupmpu();
+  // accsensor::setupmpu();
 
   // Inicializa ponto de acesso WIFI.
   while (!internals::initialize_wifi())
@@ -25,12 +25,14 @@ void loop() {
   // Realiza a conexão com o cliente.
   connection::handle_connection();
   
-  //if(accsensor::mpu.begin()){
-    //accsensor::readsensor_toserial();
-  //}
+  // if(accsensor::mpu.begin()){
+  //   accsensor::readsensor_toserial();
+  // }
 
-  movement::move_forward();
+  // movement::run( );
+
+  movement::move_forward( );
   delay(5000);
-  movement::halt();
+  movement::halt( );
   delay(5000);
 }
