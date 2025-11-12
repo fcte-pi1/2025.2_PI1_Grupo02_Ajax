@@ -14,10 +14,18 @@ namespace internals {
 namespace pins {
 // LED acoplado ao microcontrolador.
 static constexpr uint8_t LED_BUILTIN = 2u;
+
+// Pinos de controle da ponte-H.
+static constexpr uint8_t L298N_ENA = 14u;
+static constexpr uint8_t L298N_ENB = 32u;
+static constexpr uint8_t L298N_IN1 = 27u;
+static constexpr uint8_t L298N_IN2 = 26u;
+static constexpr uint8_t L298N_IN3 = 25u;
+static constexpr uint8_t L298N_IN4 = 33u;
 } // namespace pins
 
 namespace constants {
-// Taxa de comunicação UART serial.
+// Taxa de comunicação UART serial.-
 static constexpr unsigned long BAUD_RATE = 115200u;
 
 // Nome da rede de WIFI roteada pelo microcontrolador.
@@ -36,7 +44,14 @@ static const IPAddress GATEWAY(255, 255, 255, 0);
 /// @brief Configura todos os pinos de GPIO utilizados pela ESP32.
 inline auto initialize_pins() -> void {
   Serial.println("[INFO] Configurando pinos.");
+
   pinMode(pins::LED_BUILTIN, OUTPUT);
+  pinMode(pins::L298N_ENA, OUTPUT);
+  pinMode(pins::L298N_ENB, OUTPUT);
+  pinMode(pins::L298N_IN1, OUTPUT);
+  pinMode(pins::L298N_IN2, OUTPUT);
+  pinMode(pins::L298N_IN3, OUTPUT);
+  pinMode(pins::L298N_IN4, OUTPUT);
 }
 
 /// @brief Configura a comunicação UART serial para monitoramento.
