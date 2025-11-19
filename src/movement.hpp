@@ -1,12 +1,14 @@
 ///
 /// movement.hpp
 /// Define todo os metodos de controle da ponte-H, possibilitando o movimento do carrinho
+/// herda mpu para fins de correção
 ///
 
 
 #ifndef MOVEMENT_HH
 #define MOVEMENT_HH
 
+#include "accsensor.hpp"
 #include "internals.hpp"
 
 enum class MovementType : uint8_t {
@@ -175,9 +177,10 @@ namespace movement {
 
   // @brief Faz o carrinho andar para frente.
   auto
-  move_forwards( ) -> void {
-    analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED);
-    analogWrite(internals::pins::L298N_ENB, constants::MAX_SPEED);
+  move_forwards(int bias = 0) -> void {
+    //common init
+    analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED + bias);
+    analogWrite(internals::pins::L298N_ENB, constants::MAX_SPEED - bias);
     digitalWrite(internals::pins::L298N_IN1, HIGH);
     digitalWrite(internals::pins::L298N_IN2, LOW);
     digitalWrite(internals::pins::L298N_IN3, HIGH);
