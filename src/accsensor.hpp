@@ -10,85 +10,35 @@
 
 namespace accsensor{
     Adafruit_MPU6050 mpu;
+    float rotation{ };
 
     void setupmpu(void) {
-        Serial.begin(115200);
-        while (!Serial) {
-            delay(10); // will pause Zero, Leonardo, etc until serial console opens
-        }
-
         // Try to initialize!
         if (!mpu.begin()) {
-            //TODO -> make this send a warning via wifi.
             Serial.println("Failed to find MPU6050 chip");
-            while (1) {
-            delay(10);
-            }
         }
 
-        mpu.setAccelerometerRange(MPU6050_RANGE_16_G);
-        mpu.setGyroRange(MPU6050_RANGE_250_DEG);
+        mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
+        mpu.setGyroRange(MPU6050_RANGE_2000_DEG);
         mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
-        Serial.println("");
+
+        Serial.println("[INFO] MPU inicializado com sucesso.");
+
         delay(100);
     }
 
-    void readsensor_toserial(){
-
+    void read(){
         /* Get new sensor events with the readings */
         sensors_event_t a, g, temp;
         mpu.getEvent(&a, &g, &temp);
 
-        /* Print out the values */
-        Serial.print("AccelX:");
-        Serial.print(a.acceleration.x);
-        Serial.print(",");
-        Serial.print("AccelY:");
-        Serial.print(a.acceleration.y);
-        Serial.print(",");
-        Serial.print("AccelZ:");
-        Serial.print(a.acceleration.z);
-        Serial.print(", ");
-        Serial.print("GyroX:");
-        Serial.print(g.gyro.x);
-        Serial.print(",");
-        Serial.print("GyroY:");
-        Serial.print(g.gyro.y);
-        Serial.print(",");
-        Serial.print("GyroZ:");
-        Serial.print(g.gyro.z);
-        Serial.println("");
-
-        //delay(10);
+        if (abs(g.gyro.z) > 0.008) {
+            rotation += g.gyro.z;
+        }
     }
 
-    void readsensor_tovalue(){
-
-        /* Get new sensor events with the readings */
-        sensors_event_t a, g, temp;
-        mpu.getEvent(&a, &g, &temp);
-
-        /* Print out the values */
-        Serial.print("AccelX:");
-        Serial.print(a.acceleration.x);
-        Serial.print(",");
-        Serial.print("AccelY:");
-        Serial.print(a.acceleration.y);
-        Serial.print(",");
-        Serial.print("AccelZ:");
-        Serial.print(a.acceleration.z);
-        Serial.print(", ");
-        Serial.print("GyroX:");
-        Serial.print(g.gyro.x);
-        Serial.print(",");
-        Serial.print("GyroY:");
-        Serial.print(g.gyro.y);
-        Serial.print(",");
-        Serial.print("GyroZ:");
-        Serial.print(g.gyro.z);
-        Serial.println("");
-
-        //delay(10);
+    void reset() {
+        rotation = 0.f;
     }
 }
 

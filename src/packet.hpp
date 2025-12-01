@@ -13,6 +13,7 @@
 #define HIGHER_BYTE (0xFF00)
 
 enum class PacketType_t : uint8_t { HANDSHAKE = 1, MOVE = 2, TURN = 3, STATUS = 4 };
+enum class Status_t : uint8_t { READY = 1, KEEP_ALIVE = 2 };
 
 template <size_t S = 0> class Packet_t {
 public:
@@ -76,8 +77,8 @@ auto create_turn(uint16_t degrees) -> Packet_t<2> {
   return Packet_t<2>(PacketType_t::TURN, data);
 }
 
-auto create_status(uint8_t status) -> Packet_t<2> {
-  uint8_t data[] = {0, status};
+auto create_status(Status_t status) -> Packet_t<2> {
+  uint8_t data[] = {0, static_cast<uint8_t>(status)};
 
   return Packet_t<2>(PacketType_t::STATUS, data);
 }
