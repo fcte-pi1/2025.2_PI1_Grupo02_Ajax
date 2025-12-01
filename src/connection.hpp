@@ -33,11 +33,15 @@ namespace connection {
   namespace constants {
   // Tamanho máximo de cada pacote.
     static constexpr size_t MAX_BUFFER_SIZE = 32;
+    static constexpr unsigned long MAX_KEEP_ALIVE_THRESHOLD = 10000;
   } // namespace constants
 
   // Estados atuais da máquina de comunicação.
   static ConnectionState_t connection_state = UNINITIALIZED;
   static CommunicationState_t communication_state = NONE;
+
+  // O tempo desde que o backend enviou pacotes.
+  static unsigned int last_keep_alive_time = 0;
 
   WiFiServer server(8080);
   WiFiClient client;
@@ -100,6 +104,9 @@ namespace connection {
 
         // Limpamos a entrada.
         client.flush();
+        
+        // Reiniciamos o Watchdog de comunicação.
+        last_keep_alive_time = millis();
       }
     }
 
@@ -112,27 +119,17 @@ namespace connection {
 
       Serial.printf("[INFO] Recebido pacote de %d bytes.\n", packet_size);
 
-      auto move = packet_builder::create_move(cm);
-
-      auto turn = packet_builder::create_turn(buffer[2] ? 90 : 270);
-
       switch (buffer[0]) {
       case static_cast<uint8_t>(PacketType_t::MOVE):
 
         Serial.printf("[PACKET] Recebido pacote de movimento, cm: %d.\n", cm);
         movement_queue::add_forward(cm);
-
-        client.write(move.data(), move.size());
         break;
 
       case static_cast<uint8_t>(PacketType_t::TURN):
         Serial.printf("[PACKET] Recebido pacote de rotacao, direcao: %s.\n", buffer[2] ? "esquerda" : "direita");
 
-        buffer[2] 
-          ? movement_queue::add_turn_left() 
-          : movement_queue::add_turn_right();
-
-        client.write(turn.data(), turn.size());
+        buffer[2] ? movement_queue::add_turn_left() : movement_queue::add_turn_right();
         break;
       
       case static_cast<uint8_t>(PacketType_t::STATUS):
@@ -141,12 +138,24 @@ namespace connection {
 
           movement::is_ready = true;
         }
+
+        last_keep_alive_time = millis();
         break;
 
       default:
         Serial.println("[PACKET] Pacote nao reconhecido recebido!");
         break;
       }
+    }
+
+    // Checamos se o cliente deixou de enviar pacotes de KEEP_ALIVE por mais do que 
+    // o esperado.
+    if (millis() - last_keep_alive_time >= constants::MAX_KEEP_ALIVE_THRESHOLD) {
+      // Efetuamos a desconexão.
+      Serial.println("[ERRO] O cliente perdeu a conexao (timeout), desconectando.");
+
+      client.flush();
+      client.stop();
     }
   }
 
@@ -161,7 +170,7 @@ namespace connection {
     }
 
     else if (connection_state == CONNECTED) {
-      const auto status = packet_builder::create_status(connection_state);
+      const auto status = packet_builder::create_status(Status_t::KEEP_ALIVE);
 
       client.write(status.data(), status.size());
     }

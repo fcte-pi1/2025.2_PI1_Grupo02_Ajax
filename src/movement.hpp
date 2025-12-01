@@ -138,12 +138,12 @@ namespace movement {
     static constexpr float TO_CM_MS = 0.01f * 1000.f;
     static constexpr float REACTION_TIME_ADJUSTMENT = 475.f;
 
+    // @TODO: Calibrar na FGA.
     // Função linear definida a partir de valores experimentais.
     // Distancia x Tempo
     return 2.1 * cm * TO_CM_MS + REACTION_TIME_ADJUSTMENT;
   }
 
-  // @brief Para todo o movimento do carrinho.
   auto
   halt( ) -> void {
     analogWrite(internals::pins::L298N_ENA, constants::MIN_SPEED);
@@ -154,7 +154,6 @@ namespace movement {
     digitalWrite(internals::pins::L298N_IN4, LOW);
   }
 
-  // @brief Faz o carrinho andar para frente.
   auto
   turn_right() -> void {
     //common init
@@ -166,7 +165,6 @@ namespace movement {
     digitalWrite(internals::pins::L298N_IN4, LOW);
   }
 
-  // @brief Faz o carrinho andar para trás.
   auto
   turn_left( ) -> void {
     analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED);
@@ -177,7 +175,6 @@ namespace movement {
     digitalWrite(internals::pins::L298N_IN4, HIGH);
   }
 
-  // @brief Faz o carrinho virar para direita.
   auto
   move_backwards( ) -> void {
     analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED);
@@ -188,7 +185,6 @@ namespace movement {
     digitalWrite(internals::pins::L298N_IN4, LOW);
   }
 
-  // @brief Faz o carrinho virar para esquerda.
   auto
   move_forwards( ) -> void {
     auto left_speed = (accsensor::rotation > 0.f || abs(accsensor::rotation) < 0.1f) 
@@ -229,13 +225,19 @@ namespace movement {
 
   auto
   run( ) -> void {
+    // Checamos se já executamos todos os comandos ou se não temos comandos pendentes.
     if (movement_queue::empty( )) {
+      movement_queue::reset( );
       movement::halt( );
+
+      // @TODO: Soltar o ovo.
+      if (is_ready) {}
 
       is_ready = false;
       return;
     }
 
+    // Checamos se o back-end já indicou que podemos começar o trajeto.
     if (!is_ready) {
       return;
     }

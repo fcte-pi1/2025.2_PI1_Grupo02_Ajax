@@ -25,4 +25,7 @@ void loop() {
 
   // Realiza a conexão com o cliente.
   connection::handle_connection();
+
+  // Executa os movimentos.
+  movement::run();
 }
