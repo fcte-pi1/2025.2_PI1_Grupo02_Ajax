@@ -118,17 +118,27 @@ namespace connection {
       uint16_t cm = (buffer[1] << 8) + buffer[2];
 
       Serial.printf("[INFO] Recebido pacote de %d bytes.\n", packet_size);
-
+      uint16_t cm{0};
       switch (buffer[0]) {
+<<<<<<< Updated upstream
       case static_cast<uint8_t>(PacketType_t::MOVE):
+=======
+        case static_cast<uint8_t>(PacketType_t::MOVE):
+          cm = (buffer[1] << 8) + buffer[2];
+          Serial.printf("[PACKET] Recebido pacote de movimento, cm: %d.\n", cm);
+          movement_queue::add_forward(cm);
+          break;
+>>>>>>> Stashed changes
 
-        Serial.printf("[PACKET] Recebido pacote de movimento, cm: %d.\n", cm);
-        movement_queue::add_forward(cm);
-        break;
+        case static_cast<uint8_t>(PacketType_t::TURN):
+          Serial.printf("[PACKET] Recebido pacote de rotacao, direcao: %s.\n", buffer[2] ? "esquerda" : "direita");
 
-      case static_cast<uint8_t>(PacketType_t::TURN):
-        Serial.printf("[PACKET] Recebido pacote de rotacao, direcao: %s.\n", buffer[2] ? "esquerda" : "direita");
+          buffer[2] 
+            ? movement_queue::add_turn_left() 
+            : movement_queue::add_turn_right();
+          break;
 
+<<<<<<< Updated upstream
         buffer[2] ? movement_queue::add_turn_left() : movement_queue::add_turn_right();
         break;
       
@@ -145,6 +155,11 @@ namespace connection {
       default:
         Serial.println("[PACKET] Pacote nao reconhecido recebido!");
         break;
+=======
+        default:
+          Serial.println("[PACKET] Pacote nao reconhecido recebido!");
+          break;
+>>>>>>> Stashed changes
       }
     }
 

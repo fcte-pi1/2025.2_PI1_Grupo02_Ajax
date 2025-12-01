@@ -94,6 +94,7 @@ if __name__ == "__main__":
     network_thread = threading.Thread(target=run_networking)
     network_thread.start()
 
+    send_packets()
     # Backend...
     while True:
         print("Rodando...")

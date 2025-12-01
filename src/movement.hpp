@@ -127,6 +127,7 @@ namespace movement {
     inline constexpr uint16_t GYRO_SPEED_MULTIPLIER = 5;
     inline constexpr uint16_t MIN_SPEED = 0;
   } // namespace constants
+<<<<<<< Updated upstream
 
   static bool is_ready = false;
 
@@ -144,6 +145,9 @@ namespace movement {
     return 2.1 * cm * TO_CM_MS + REACTION_TIME_ADJUSTMENT;
   }
 
+=======
+  // @brief Para todo o movimento do carrinho.
+>>>>>>> Stashed changes
   auto
   halt( ) -> void {
     analogWrite(internals::pins::L298N_ENA, constants::MIN_SPEED);
@@ -204,6 +208,7 @@ namespace movement {
   }
 
   auto
+<<<<<<< Updated upstream
   execute(MovementNode* node) -> void {
     unsigned long timer = 0;
     if (node->type == MovementType::FORWARD) {
@@ -241,6 +246,11 @@ namespace movement {
     if (!is_ready) {
       return;
     }
+=======
+  run( ) -> void {
+    if (movement_queue::empty( ))
+      return;
+>>>>>>> Stashed changes
 
     MovementNode* current = movement_queue::get_and_consume( );
 
@@ -250,7 +260,32 @@ namespace movement {
       return;
     }
 
+<<<<<<< Updated upstream
     execute(current);
+=======
+    // @TODO: Calibragem.
+    switch (current->type) {
+      case MovementType::FORWARD:
+        move_forwards( );
+        delay(1000);
+        break;
+
+      case MovementType::BACKWARD:
+        move_backwards( );
+        delay(1000);
+        break;
+
+      case MovementType::LEFT:
+        turn_left( );
+        delay(1000);
+        break;
+
+      case MovementType::RIGHT:
+        turn_right( );
+        delay(1000);
+        break;
+    }
+>>>>>>> Stashed changes
   } 
 } // namespace movement
 

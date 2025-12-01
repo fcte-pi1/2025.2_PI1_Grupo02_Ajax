@@ -1,4 +1,5 @@
 #include "connection.hpp"
+#include "buzzer.hpp"
 #include "internals.hpp"
 #include "accsensor.hpp"
 #include "movement.hpp"
@@ -10,13 +11,16 @@ void setup() {
   internals::initialize_pins();
   //accsensor::setupmpu();
                          
+  //start melody:
+  buzzer::run_buzzer_melody1(buzzer::melody1, buzzer::noteDurations1);
+  //accsensor::setupmpu(); //already verifies if mpu exists!
   // Inicializa ponto de acesso WIFI.
   while (!internals::initialize_wifi())
     delay(1000);
   
 }
 
-void loop() {
+void run_queue_test(){
   // Tentamos conectar ao cliente.
   if (!connection::attempt_connection()) {
     delay(1000);
