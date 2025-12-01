@@ -16,12 +16,12 @@ enum class MovementType : uint8_t {
   BACKWARD,
   LEFT,
   RIGHT
-}
+};
 
 struct MovementNode {
   MovementType type;
   uint16_t value;
-}
+};
 
 namespace movement_queue {
   namespace constants {
@@ -124,45 +124,24 @@ namespace movement {
     // Define a velocidade maxima e minima, em intervalo 0 a 255, do carrinho.
     // Este valor condiz com ~6V e 0V de saída.
     inline constexpr uint16_t MAX_SPEED = 75;
+    inline constexpr uint16_t GYRO_SPEED_MULTIPLIER = 5;
     inline constexpr uint16_t MIN_SPEED = 0;
   } // namespace constants
 
+  static bool is_ready = false;
+
+  /// @brief Calcula o tempo em milisegundos para o carrinho andar uma quantidade de centímetros.
+  /// @param cm A distância em centímetros
+  /// @return O tempo em milisegundos
   auto
-  run( ) -> void {
-    if (movement_queue::empty( ))
-      return;
+  cm_to_ms(uint16_t cm) -> float {
+    static constexpr float TO_CM_MS = 0.01f * 1000.f;
+    static constexpr float REACTION_TIME_ADJUSTMENT = 475.f;
 
-    MovementNode* current = movement_queue::get_and_consume( );
-
-    if (current == NULL) {
-      // @TODO: Enviar erro para o back-end.
-      Serial.println("[ERRO] A fila de comandos retornou um valor invalido!");
-      return;
-    }
-
-    // @TODO: Calibragem.
-    switch (current->type) {
-      case MovementType::FORWARD:
-        move_forwards( );
-        delay(1000);
-        break;
-
-      case MovementType::BACKWARD:
-        move_backwards( );
-        delay(1000);
-        break;
-
-      case MovementType::LEFT:
-        turn_left( );
-        delay(1000);
-        break;
-
-      case MovementType::RIGHT:
-        turn_right( );
-        delay(1000);
-        break;
-    }
-  } 
+    // Função linear definida a partir de valores experimentais.
+    // Distancia x Tempo
+    return 2.1 * cm * TO_CM_MS + REACTION_TIME_ADJUSTMENT;
+  }
 
   // @brief Para todo o movimento do carrinho.
   auto
@@ -177,10 +156,10 @@ namespace movement {
 
   // @brief Faz o carrinho andar para frente.
   auto
-  move_forwards(int bias = 0) -> void {
+  turn_right() -> void {
     //common init
-    analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED + bias);
-    analogWrite(internals::pins::L298N_ENB, constants::MAX_SPEED - bias);
+    analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED);
+    analogWrite(internals::pins::L298N_ENB, constants::MAX_SPEED);
     digitalWrite(internals::pins::L298N_IN1, HIGH);
     digitalWrite(internals::pins::L298N_IN2, LOW);
     digitalWrite(internals::pins::L298N_IN3, HIGH);
@@ -189,7 +168,7 @@ namespace movement {
 
   // @brief Faz o carrinho andar para trás.
   auto
-  move_backwards( ) -> void {
+  turn_left( ) -> void {
     analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED);
     analogWrite(internals::pins::L298N_ENB, constants::MAX_SPEED);
     digitalWrite(internals::pins::L298N_IN1, LOW);
@@ -200,7 +179,7 @@ namespace movement {
 
   // @brief Faz o carrinho virar para direita.
   auto
-  turn_right( ) -> void {
+  move_backwards( ) -> void {
     analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED);
     analogWrite(internals::pins::L298N_ENB, constants::MAX_SPEED);
     digitalWrite(internals::pins::L298N_IN1, LOW);
@@ -211,14 +190,66 @@ namespace movement {
 
   // @brief Faz o carrinho virar para esquerda.
   auto
-  turn_left( ) -> void {
-    analogWrite(internals::pins::L298N_ENA, constants::MAX_SPEED);
-    analogWrite(internals::pins::L298N_ENB, constants::MAX_SPEED);
+  move_forwards( ) -> void {
+    auto left_speed = (accsensor::rotation > 0.f || abs(accsensor::rotation) < 0.1f) 
+      ? constants::MAX_SPEED 
+      : constants::MAX_SPEED - abs(accsensor::rotation) * constants::GYRO_SPEED_MULTIPLIER;
+
+    auto right_speed = (accsensor::rotation < 0.f || abs(accsensor::rotation) < 0.1f) 
+      ? constants::MAX_SPEED 
+      : constants::MAX_SPEED - abs(accsensor::rotation) * constants::GYRO_SPEED_MULTIPLIER;
+
+    analogWrite(internals::pins::L298N_ENA, left_speed);
+    analogWrite(internals::pins::L298N_ENB, right_speed * 0.9);
     digitalWrite(internals::pins::L298N_IN1, HIGH);
     digitalWrite(internals::pins::L298N_IN2, LOW);
     digitalWrite(internals::pins::L298N_IN3, LOW);
     digitalWrite(internals::pins::L298N_IN4, HIGH);
   }
+
+  auto
+  execute(MovementNode* node) -> void {
+    unsigned long timer = 0;
+    if (node->type == MovementType::FORWARD) {
+      while (timer < cm_to_ms(node->value)) {
+        unsigned long begin = millis();
+
+        accsensor::read( );
+
+        move_forwards( );
+        delay(10);
+
+        unsigned long end = millis();
+
+        timer += end - begin;
+        Serial.printf("Timer: %zu\n", timer);
+      }
+    }
+  }
+
+  auto
+  run( ) -> void {
+    if (movement_queue::empty( )) {
+      movement::halt( );
+
+      is_ready = false;
+      return;
+    }
+
+    if (!is_ready) {
+      return;
+    }
+
+    MovementNode* current = movement_queue::get_and_consume( );
+
+    if (current == NULL) {
+      // @TODO: Enviar erro para o back-end.
+      Serial.println("[ERRO] A fila de comandos retornou um valor invalido!");
+      return;
+    }
+
+    execute(current);
+  } 
 } // namespace movement
 
 #endif

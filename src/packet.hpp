@@ -13,6 +13,7 @@
 #define HIGHER_BYTE (0xFF00)
 
 enum class PacketType_t : uint8_t { HANDSHAKE = 1, MOVE = 2, TURN = 3, STATUS = 4 };
+enum class Status_t : uint8_t { READY = 1 };
 
 template <size_t S = 0> class Packet_t {
 public:

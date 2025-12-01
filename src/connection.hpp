@@ -108,15 +108,21 @@ namespace connection {
 
       // Todos os pacotes, exceto o handshake, possuem 3 bytes.
       size_t packet_size = client.readBytes(buffer, 3);
+      uint16_t cm = (buffer[1] << 8) + buffer[2];
 
       Serial.printf("[INFO] Recebido pacote de %d bytes.\n", packet_size);
 
+      auto move = packet_builder::create_move(cm);
+
+      auto turn = packet_builder::create_turn(buffer[2] ? 90 : 270);
+
       switch (buffer[0]) {
       case static_cast<uint8_t>(PacketType_t::MOVE):
-        uint16_t cm = (buffer[1] << 8) + buffer[2];
 
         Serial.printf("[PACKET] Recebido pacote de movimento, cm: %d.\n", cm);
         movement_queue::add_forward(cm);
+
+        client.write(move.data(), move.size());
         break;
 
       case static_cast<uint8_t>(PacketType_t::TURN):
@@ -125,6 +131,16 @@ namespace connection {
         buffer[2] 
           ? movement_queue::add_turn_left() 
           : movement_queue::add_turn_right();
+
+        client.write(turn.data(), turn.size());
+        break;
+      
+      case static_cast<uint8_t>(PacketType_t::STATUS):
+        if (buffer[2] == static_cast<uint8_t>(Status_t::READY)) {
+          Serial.printf("[PACKET] Recebido confirmacao do backend, iniciando movimento.");
+
+          movement::is_ready = true;
+        }
         break;
 
       default:
